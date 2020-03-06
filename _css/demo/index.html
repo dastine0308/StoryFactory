@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Story Factory</title>
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../_css/site.css" rel="stylesheet">
+    <link href="../_css/jquery-ui.min.css">
+    <script src="../_js/jquery.min.js"></script>
+    <script src="../_js/site.js"></script>
+    <script src="_js/jquery-ui.min.js"></script>
+    
+    <script src="_js/jquery-1.11.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js"></script>
+     
+    <style>
+        #header{
+            font-family:cursive;
+            position:absolute;
+            left: 700px;
+            top: 180px;
+            font-size: 150%; 
+            color:#ffd306 ;
+            font-weight: bold;
+            z-index: 1;
+            }
+        .hide{
+            display: none;
+        }
+        #z{
+            font-weight: 400;
+            font-size: 3.5em;
+        }
+        #z.letter{
+            display: inline-block;
+            line-height: 1em;
+        }
+        #nav{            
+            font-family: cursive;
+            position:absolute;
+            color: #3c3c3c;
+            left: 20px;
+            top: 150px;
+            font-size: 200%;
+            z-index: 1;
+        }
+        #nav ul{
+            list-style:none;
+            text-align: center;
+        }
+        #nav li{
+            display:inline-block;
+            margin-right: 0px;
+            font-family: inherit;
+        }
+        #nav a{
+            display: block;
+            color: #3c3c3c;
+            text-decoration: none;
+            font-size: 20px; 
+            text-align: center;
+            font-family:inherit;
+            line-height: 30px;
+            padding-left: 30px; 
+            padding-right: 30px; 
+        }
+        #image{
+            margin: 0px auto;  
+            text-align: center;
+            opacity: 0.6;
+        }  
+        .image div{
+            height: 550px;
+            width: auto;
+            
+        }
+        .side{
+            margin: 0px auto;
+            text-align: center;
+        }
+        .side div{
+            display: inline-block;
+            vertical-align: top;
+            width: 800px;
+            height: 345px;
+            margin-right: 60px;
+        }
+        
+        #footer{
+            right: 10px;
+            color:bisque;
+            z-index: 1;
+            position:absolute;
+            text-align: center;
+            box-sizing: border-box;
+        }
+        .footIcon{
+            display: inline-block;
+            margin: 14px
+        }
+        .footIcon img{
+            width: 35px;            
+        }
+        #one{
+           padding-left: 300px;
+           color:#8e8e8e; 
+        }
+        .item1{
+            font-weight: 200;
+            font-size: 1.8em;
+            text-transform: uppercase;
+            letter-spacing: 0.5em;
+        }
+        .item1.letter{
+            display: inline-block;
+            line-height: 1em;
+        }
+        #post{
+            top: 10px;
+            width: 800px;
+            height: 10px;
+        }
+        #post img{
+            transition: all 0.5s ease 0s;
+        }
+        #post img:hover{
+            -moz-transform:scale(1.1);
+            -ms-transform:scale(1.1);
+            -o-transform:scale(1.1);
+            -webkit-transform:scale(1.1);
+            transform: scale(1.1);
+            opacity: .8;
+        }
+        #img0{
+            position: absolute;
+            width:450px;
+            height:300px;
+            top: 650px;
+            left: 80px;
+            padding-left: 100px;
+            padding-right: 20px;
+            z-index: 0;
+        }
+        #img00{
+            position: absolute;
+            width: 450px;
+            height: 300px;
+            left: 100px;
+            top: 680px;
+            background-color: antiquewhite;
+            z-index: -1;
+        }
+        #two{
+            color: #8e8e8e;
+            padding-right: 300px;
+        }
+        #img1{
+            position: absolute;
+            width:450px;
+            height:300px;
+            top: 1020px;
+            right: 100px;
+            padding-left: 20px;
+            padding-right: 80px;
+            z-index: 1;
+        }
+        
+        #img10{
+            position: absolute;
+            width: 450px;
+            height: 300px;
+            right: 50px;
+            top: 980px;
+            background-color:#ffed97;
+            z-index: 0;
+        }
+        #three{
+           padding-left: 300px;
+           color:#8e8e8e; 
+        }
+         #img2{
+            position: absolute;
+            width:450px;
+            height:300px;
+            top: 1370px;
+            left: 80px;
+            padding-left: 100px;
+            padding-right: 20px;
+            z-index: 1;
+        }
+        #img20{
+            position: absolute;
+            width: 450px;
+            height: 300px;
+            left: 100px;
+            top: 1340px;
+            background-color:#c4e1ff;
+            z-index: 0;
+        }
+
+</style>
+   
+   <script>
+    $(document).ready(function(){
+        $('.p').mouseover(function(){
+        $('.p').css("color","#cf9e9e	");
+        });
+        $('.p').mouseout(function(){
+            $('.p').css("color","#8e8e8e");
+  });
+        
+        $('.p1').mouseover(function(){
+        $('.p1').css("color","#5cadad");
+        });
+        $('.p1').mouseout(function(){
+            $('.p1').css("color","#8e8e8e");
+  });
+       
+        $('.p2').mouseover(function(){
+        $('.p2').css("color","#ea7500");
+        });
+        $('.p2').mouseout(function(){
+            $('.p2').css("color","#8e8e8e");
+  });
+     
+        $('.p0').mouseover(function(){
+        $('.p0').css("color","#ff8f59 	");
+        });
+        $('.p0').mouseout(function(){
+            $('.p0').css("color","#3c3c3c");
+  });
+        
+        $('.p3').mouseover(function(){
+        $('.p3').css("color","#ff8f59	");
+        });
+        $('.p3').mouseout(function(){
+            $('.p3').css("color","#3c3c3c");
+  });
+        
+        $('.p4').mouseover(function(){
+        $('.p4').css("color","#ff8f59	");
+        });
+        $('.p4').mouseout(function(){
+            $('.p4').css("color","#3c3c3c");
+  });
+        
+      $('#z').mouseover(function() {
+        $('#submenu').show();
+    });
+    $('#z').mouseleave(function() {
+        $('#submenu').hide();
+    });
+        $('#img0').mousemove(function(){
+    $('.story').animate({left: '250px'});
+  });
+        $('#z').each(function(){
+        $(this).html($(this).text().replace(/([^\x00-\x80]|\w)/g, "<span class='letter'>$&</span>"));
+    });
+
+    anime.timeline({loop: true})
+        .add({
+        targets: '#z .letter',
+        scale: [4,1],
+        opacity: [0,1],
+        translateZ: 0,
+        easing: "easeOutExpo",
+        duration: 950,
+        delay: function(el, i) {
+        return 70*i;
+        }
+        }).add({
+        targets: '#z',
+        opacity: 0,
+        duration: 1000,
+        easing: "easeOutExpo",
+        delay: 1000
+    });
+        
+        $('.item1').each(function(){
+        $(this).html($(this).text().replace(/([^\x00-\x80]|\w)/g, "<span class='letter'>$&</span>"));
+    });
+
+        anime.timeline({loop: true})
+        .add({
+        targets: '.item1 .letter',
+        translateX: [40,0],
+        translateZ: 0,
+        opacity: [0,1],
+        easing: "easeOutExpo",
+        duration: 1200,
+        delay: function(el, i) {
+        return 500 + 30 * i;
+        }
+        }).add({
+        targets: '.item1 .letter',
+        translateX: [0,-30],
+        opacity: [1,0],
+        easing: "easeInExpo",
+        duration: 1100,
+        delay: function(el, i) {
+        return 100 + 30 * i;
+        }
+  });
+  });
+    </script>
+</head>
+
+<body>
+  <div style="position:relative">
+    <div id="footer">
+    <div class="footIcon">
+              <a href="https://www.facebook.com/"><img src="../image/facebook-logo-in-circular-button-outlined-social-symbol.png"></a>
+          </div>
+        <div class="footIcon">
+              <a href="https://www.instagram.com/"><img src="../image/instagram.png"></a>
+          </div>
+    <div class="footIcon">
+              <a href="https://accounts.google.com/Login/signinchooser?hl=zh-tw&flowName=GlifWebSignIn&flowEntry=ServiceLogin"><img src="../image/mail.png"></a>
+          </div>
+    </div>
+      <div id="header">
+      <div id="z">Story Factory</div>
+      <div class="hide" id="submenu"><p style="color: black;font-size:x-large;color: #272727">smile made in Hualien</p></div></div>
+      <div id="nav">
+        <ul>
+        <li><a href="storybed.html" class="p0">Story Bed<br>故事床</a>
+        </li>
+        <li>|</li>
+        <li><a href="QA.html" class="p3">QA<br>問答</a></li>
+        <li>|</li> 
+        <li><a href="message.html" class="p4">Message<br>留言</a></li>
+        </ul>
+       </div>
+      
+     
+     <div id="image"><img src="../image/hualien-travel-guide-3.jpg" width="1330" height="600"></div></div> 
+    
+ 
+    
+    <HR width="80%" SIZE=1 align="center"></HR> 
+    <br>
+    <div class="side">
+        <div id="one"><br><h1 class="p" style="font-family:inherit;font-style:italic;font-size:300%;">01.花蓮</h1><p></p>
+        <h2 class="item1" style="font-family:inherit;font-size: 200%;padding-left: 400px;">Hualien</h2>
+        <p></p>
+        <br>
+        <p></p>
+        <br>
+        <h3 style="padding-left: 150px;">想知道古早街道的樣貌以及歷史人文的輪廓嗎?</h3>
+    <div id="post">
+    <img src="../image/lazyfonz1/1.jpg" id="img0"></div>
+    <div id="img00">
+    </div></div>
+    <br>
+    <p></p>
+    <br>
+    <div id="two"><h1 class="p1" style="font-family:inherit;font-style:italic;font-size:300%;padding-left:300px">02.故事</h1>
+    <h2  class="item1" style="font-family:inherit;font-size: 200%;padding-right: 400px;">Story</h2>
+    <p></p>
+    <br>
+    <p></p>
+    <br>
+    <h3 style="padding-left: :20px;">想要住進自己最喜歡的故事房間嗎?</h3>
+    <div id="post">
+    <img src="../image/824ebafc0415ef74803a43b57183f4e8.jpg" id="img1">
+    </div>
+    <div id="img10">
+    </div></div>
+    <br>
+    <p></p>
+    <br>
+    <p></p>
+    <p></p>
+    <div id="three"><h1 class="p2" style="font-family:inherit;font-style:italic;font-size:300%;">03.文化</h1>
+    <h2  class="item1" style="font-family:inherit;font-size: 200%;padding-left: 400px;">Culture</h2>
+    <p></p>
+    <br>
+    <p></p>
+    <br>
+    <h3 style="padding-left: 250px;">想體驗不同文化間的交流嗎?</h3>
+    <div id="post">
+    <img src="../image/p11.jpg" id="img2">
+    </div>
+    <div id="img20"></div>
+    </div>
+    <br>
+    <HR width="80%" SIZE=1 align="center"></HR> 
+    </div> 
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>QA</title>
+
+    <script src="../_js/jquery.min.js"></script>
+    <script src="../_js/jquery-ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"/>
+    
+    <script>
+        $(document).ready(function() {
+             <!-- 標籤hover-->
+             $("#1").hover(function(){
+                $(this).addClass('inhover');
+                },function(){
+                $(this).removeClass('inhover');
+            })   
+             $("#2").hover(function(){
+                $(this).addClass('inhover');
+                },function(){
+                $(this).removeClass('inhover');
+            }) 
+            $("#3").hover(function(){
+                $(this).addClass('inhover');
+                },function(){
+                $(this).removeClass('inhover');
+            })   
+             $("#4").hover(function(){
+                $(this).addClass('inhover');
+                },function(){
+                $(this).removeClass('inhover');
+            }) 
+
+            <!--QA動畫-->
+            $('#accordion').accordion({
+                active:1,
+                animate:false,
+                event:'mouseover'
+            });
+             
+        }); // end ready
+        
+    </script>
+    <style>
+        
+      #animate{
+            padding-left: 250px;
+            font-size: 750%;
+            background-color: antiquewhite;
+            height: 250px;
+            width: 1100px;
+            color:darkslateblue;
+            font-family:sans-serif;
+      }
+        
+      #header{
+            background-color: white;
+            height: 100px;
+            text-align:right;
+            margin-right: 120px;
+            font-size: 500%;
+            font-family:cursive;
+            }
+        #nav{            
+            background-color:white;
+            height: 50px;
+            left: 50px;
+            font-family: cursive;
+            
+        }
+        #nav ul{
+            list-style:none;
+            text-align: center;
+        }
+        #nav li{
+            display:inline-block;
+            margin-right: 90px;
+            
+        }
+        #nav a{
+            display: block;
+            color: black;
+            text-decoration: none;
+            font-size: 20px; 
+            text-align: center;
+/*            background-color:white;*/
+            line-height: 50px;
+            padding-left: 30px;
+            padding-right: 30px; 
+        }
+        .atext{
+           display:none;
+        }
+        .inhover{
+            background-color:antiquewhite;
+            color: black;
+            font-weight: bolder;
+        }
+        .main h2{
+            font-size: 180%;
+            text-align: left;
+            padding-left: 150px;
+            font-family:monospace;
+        }
+
+        #accordion div{
+            font-size: 100%;
+            line-height: 1.8em;
+            text-align: left;
+            padding-left: 200px;
+        }
+        .main ul li{
+           list-style-type: none;
+        }
+       
+        .footIcon{
+            display: inline-block;
+            margin: 5px
+        }
+        .footIcon img{
+            width: 30px;            
+        }
+        #imgg{
+            position: absolute;
+            margin-left: 70px;
+            top: 90px;
+        }
+    </style>
+</head>
+<body>
+     <div id="header" class="animated bounce" style="animation-duration: 5s;animation-iteration-count:3">
+         <div class="footIcon">
+              <a href="https://www.faceboobigk.com/?stype=lo&jlou=AfevmXOuzsF_5RoFD1stRWmhsHJ15LwYLCdN2zS_8dMAymdF1bExDh5j1Bki0T1Ncze3wTzV2A4VgcjJc7HhCeNErRlPyCgiOLD_VeCoEEaDmg&smuh=33219&lh=Ac-pRiyh8wLj9G5s"><img src="../image/facebook-logo.png"></a>
+          </div>
+        <div class="footIcon">
+              <a href="https://www.instagram.com/"><img src="../image/instagram-logo.png"></a>
+          </div>
+    <div class="footIcon">
+              <a href="https://accounts.google.com/Login/signinchooser?hl=zh-tw&flowName=GlifWebSignIn&flowEntry=ServiceLogin"><img src="../image/envelope.png"></a>
+          </div>
+     </div>
+    <div id="nav">
+    <div id="imgg"><img src="../image/text-hualien-eng.png" height="150px" width="200px"></div>
+    <ul>
+        <li><a href="index.html">Story Factory</a></li>
+       <li>|</li>
+        <li id=2><a href="storybed.html">Story Bed</a></li>
+        <li id=3><a href="#">QA</a></li>
+        <li id=4><a href="message.html">Message</a></li>
+        </ul>
+       </div>
+    <HR width="80%" SIZE=1 align="center"></HR> 
+                     <h2 id="animate" class="animated fadeInRight" style="animation-duration: 4s;animation-iteration-count:1"> Just Ask Me ! </h2>
+
+    <div class="content">
+    <div class="Animate">
+            </div>
+		<div class="main">
+<!--			<h2>Q&A</h2>-->
+              
+			 <div id="accordion">
+            
+			  <h2>Q: 有年齡上的限制嗎？未成年也沒關係嗎？</h2>
+				<div>
+				  <p>因為我們希望透過年紀相仿的大家讓house內的交流及氣氛能夠更活潑更輕鬆，因此我們有年齡上的限制。<br>我們歡迎滿18歲至35歲的朋友們。</p>
+				</div>
+				<h2>Q: 住宿價格是怎麼計算的？</h2>
+				<div>
+				  <ul>
+						<li>每晚價格：由房東決定的每晚價格</li>
+						<li>清潔費：部分房東為支付清潔房源的費用而收取的一次性費用</li>
+						<li>額外房客費用：部分房東為支付額外房客使用房源產生的相關費用而收取的一次性費</li>
+				  </ul>
+				</div>
+				<h2>Q: 預訂房源前可以看房嗎？</h2>
+				<div>
+				  <p>我們鼓勵所有房東和房客在見面之前先透過我們的網站完成預訂程序，以確保雙方的安全與隱私。<br>
+                      不用親自看房也可以有多種方式了解房源和房東，包括下列方式：</p>
+				  <ul>
+						<li>傳送私人訊息</li>
+						<li>個人資料驗證</li>
+						<li>評價</li>
+				  </ul>
+				</div>
+                 <h2>Q: 誰可以成為StoryFactory房東？</h2>
+				<div>
+				    <p>
+                      在大多地區，要成為StoryFactory房東並非難事，而且建立房源完全免費。<br>StoryFactory的房東出租各式各樣的房源：整套房子／公寓、獨立房間、樹屋和城堡，還有更多不同類型的房源。<br>若要進一步了解我們對房東的要求，請查看StoryFactory的社區標準，內容包含安全、保障、可靠性、及待客標準等主題，<br>協助房東獲得房客的絕佳好評。</p>
+		
+				</div>
+                 
+                  <h2>Q: 房客預訂前需要符合哪些條件？</h2>
+				<div>
+				    <p>
+                     房客必須完整填寫這些資訊，才能送出預訂申請。這些資訊能夠幫助您了解前來住宿的人是誰，以及如何聯絡房客。<br>
+                        StoryFactory要求房客提供的資訊包括：</p>
+                         <ul>
+						<li>全名</li>
+						<li>電子郵件地址</li>
+						<li>已驗證的電話號碼</li>
+						<li>同意遵守《房屋守則》</li>
+						<li>付款資訊</li>
+                    </ul>
+				</div>
+                 
+                 
+			</div>
+  </div>
+	</div>
+</body>
+</html>

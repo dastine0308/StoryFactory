@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Concept</title>
+    <script src="../_js/jquery.min.js"></script>
+<!-- jquery ui -->
+    <link rel="stylesheet" href="https://apps.bdimg.com/libs/jqueryui/1.10.4/css/jquery-ui.min.css">
+    <script src="https://apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="https://apps.bdimg.com/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+    
+
+    <link href="../_css/jquery-ui.min.css" rel="stylesheet">
+    <script src="../_js/jquery.min.js"></script>
+    <script src="../_js/jquery-ui.min.js"></script>
+    
+<!--Animate css-->
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"/>
+    
+<!--    <script src="../_js/jquery-ui.min.js"></script>-->
+    
+    <script>
+        
+        const apiURL = 'https://api.imgur.com/3/';
+        const clientID = 'c35c38b2a4b214c'; // 填入 App 的 Client ID
+        const accessToken = '051082d590bd9aa6f7f9eb884ff2edaed84541f9'; // 填入 token
+        const albumID = 'QaVqF0X'; // 指定傳到某個相簿，就填入相簿的 ID
+        
+        var $input_img = $('#input_file');//圖片連結
+        var $file;
+        
+        var $dlg_img;
+        var $dlg_city;
+        var $dlg_style;
+        var $dlg_name;
+        var $dlg_money;
+        
+//---------------------imugr api setting
+        function test(){
+            var form = new FormData();
+            var settings = {
+            "url": "https://api.imgur.com/3/account/Dastine0308/albums/0",
+            "method": "GET",
+            "timeout": 0,
+            "headers": {
+                "Authorization": "Bearer " + accessToken,
+            },
+            "processData": false,
+            "mimeType": "multipart/form-data",
+            "contentType": false,
+            "data": form
+            };
+
+            $.ajax(settings).done(function (response) {
+              console.log(response);
+            });
+        }
+ 
+//---------------------上傳表單
+        function upload(){
+            alert("你已成功成為屋主");
+           
+            var $info=$('#input_city').val()+"@"+$('#input_style').find(':selected').text()+"@"+$('#input_room').find(':selected').text()+"@"+$('#input_name').val()+"@"+$('#input_money').val();
+            
+            console.log($file);
+            console.log("info:"+$info);
+            
+            //有選到照片
+            if ($file) {
+                
+                // set request form data
+                //imugr的參數(image, album, title, description)
+                var formData = new FormData();
+                formData.append("image", $file); // 圖片
+                formData.append("album", albumID); // 欲上傳相簿ID
+                formData.append("title", $info); // 鄉鎮
+                formData.append("description", $('#input_story').val()); // 故事
+                
+                
+                // make request setting
+                var settings = {
+                    "async": true,
+                    "crossDomain": true,
+                    "url": apiURL + "image",
+                    "method": "POST",
+                    "datatype": "json",
+                    "headers": {
+                        Authorization: 'Bearer ' + accessToken
+                    },
+                    "processData": false,
+                    "contentType": false,
+                    "data": formData,
+                    beforeSend: function() {
+                        console.log("上傳中...");
+                    },
+                    success: function(res) {
+                        console.log("上傳成功!");
+                        
+                        //---------------清空表單
+                        $input_img.val("");
+                        $file=null;
+                        $('#input_city').val("");
+                        $('#input_story').val("");
+                        $('#input_name').val("");
+                        $('#input_money').val("");
+                        $('#input_style').find(':selected').text("");
+                        $('#input_room').find(':selected').text("");
+                        //----------------------
+                        
+                        getAlbumsImages();
+
+                    },
+                    error: function() {
+                        alert("上傳失敗!");
+                    }
+                }
+
+                // do request ajax post
+                $.ajax(settings).done(function(res) {
+                    console.log("上傳請求完成!");
+//                    $('.loading').hide();
+                });
+
+            } else {
+                alert("請選擇欲上傳圖片!");
+//                $('.loading').hide();
+            }
+            
+        }
+        
+        
+//-----------------取得照片        
+        function getAlbumsImages() {
+//            $('.loading').show();
+
+            var settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": apiURL + "album/" + albumID + "/images",
+                "method": "GET",
+                "datatype": "json",
+                "headers": {
+                    Authorization: 'Bearer ' + accessToken
+                },
+                "processData": false,
+                "contentType": false,
+                beforeSend: function() {
+                    console.log("讀取相簿內圖片中...");
+                },
+                success: function(res) {
+                    console.log("相簿內圖片讀取成功!");
+                    console.log(res);
+                    refreshAlbum(res);
+                },
+                error: function() {
+                    console.log("讀取相簿內圖片失敗!");
+                    alert("相簿內圖片讀取失敗!");
+                }
+            }
+
+            //ajax局部刷新
+            $.ajax(settings).done(function(res) {
+                console.log("讀取相簿請求完成!");
+//                $('.loading').hide();
+            });
+        }
+
+        
+        function refreshAlbum(res){
+//            $('.loading').show();
+            $(".storybed").empty();
+
+            var size = res.data.length;
+            for (var i = 0; i < size; i++) {
+                
+                var tmp = res.data[i].title.split('@');
+                var city = tmp[0];//鄉鎮
+                var style=tmp[1];
+                var room=tmp[2];
+                var name=tmp[3];
+                var money=tmp[4];
+                var story = res.data[i].description;//故事
+                var link = res.data[i].link;//圖片連結
+//                var imageHash = link.split('/')[3].split('.')[0]; //link: "https://i.imgur.com/Z9DoP0H.jpg"
+                
+                
+                //----------------------------------
+                
+                var $stn=$('<div id="st" data-index="'+city+'"></div>');
+                console.log("city:"+city);
+                $('.storybed').append($stn);
+                
+                var $tmp=$('<a href="#"><img src="' + link+ '" height="200" width="300" onclick="showDlg(\'' + link +'\',\''+city+'\',\''+style+'\',\''+room+'\',\''+name+'\',\''+money+'\')"/>');
+  
+                $stn.append($tmp);//新增<img> 每個img再新增一個onclick事件 呼叫showDlg()
+                
+                var $stn2=$('<div id="st2"></div>');
+                $stn.append($stn2);
+//居住地
+                var $pn=$('<h2 class="box-body">'+city+'</h2>');
+                $stn2.append($pn);
+//故事            
+                var $h2n=$('<p class="box-body">'+story+'</p>');
+                $stn2.append($h2n);
+        
+                
+                var $btn=$('<p id="st3">' + timestamp2localtime(res.data[i].datetime) + '</p>');
+                $stn.append($btn);
+  
+                
+//---------------picture 
+                
+                $('.storybed img').each(function(){
+                    
+                    //-------hover
+                    $(this).hover(function(){
+                        $(this).fadeTo("fast",0.7);
+                    },function(){
+                        $(this).fadeTo("fast",1) ;
+                        $(this).removeClass('pichover'); 
+                    })
+           
+                });
+                
+            }
+//            $('.loading').hide();
+        }
+        
+        /*----- Dialog動態新曾 -----*/
+        function showDlg(imgLink,city,style,room,name,money) {
+            
+            $(".Dlg").empty();
+            console.log("imgLink:"+imgLink);
+            
+            $dlg_img=$('<img src="' +imgLink + '" width="100%"/>');
+            $(".Dlg").append($dlg_img);
+        
+            
+            $dlg_city=$('<p class="box-body"><img src="../image/placeholder.png" width="15px">'+"  "+city+'</p>');
+            $(".Dlg").append($dlg_city);
+            console.log("dlg_city:"+city);
+            
+            $dlg_style=$('<p class="box-body"><img src="../image/home.png" width="15px">'+"  "+style+'</p>');
+            $(".Dlg").append($dlg_style);
+            
+            $dlg_style.append("  ");
+            $dlg_style.append(room);
+            
+            $dlg_name=$('<p class="box-body"><img src="../image/user.png" width="15px">'+"  "+name+'</p>');
+            $(".Dlg").append($dlg_name);
+            
+            $dlg_money=$('<p class="box-body"><img src="../image/money-bag.png" width="15px">'+"  "+money+"/晚"+'</p>');
+            $(".Dlg").append($dlg_money);
+            
+            $( "#mydlg" ).dialog( "open" );
+        }
+       
+  
+        /*----- convert unix timestamp to local time -----*/
+        function timestamp2localtime(timestamp) {
+            var dt = new Date(timestamp * 1000);
+            var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            var year = dt.getFullYear();
+            var month = months[dt.getMonth()];
+            var date = dt.getDate();
+            
+            var time = date + ' ' + month + ' ' + year + '<br>';
+
+            return time;
+        }
+        
+        /*----- Car動態新曾 -----*/
+        function sendcar(imgLink,city,style,money) {
+ 
+//            imgLink.css({width:"100px" ,height:"100px",paddingLeft:"5px"});
+//            $(".mycar form").append(imgLink);
+//        
+//            var $car_div=$('<div></div>');
+//            imgLink.append($car_div)
+            city.css({float:"right",paddingRight:"30%",color:"white"});
+            $(".mycar form").append(city);
+          
+            style.css({paddingLeft:"15px",color:"white"});
+            $(".mycar form").append(style);
+            
+            money.css({paddingLeft:"15px",color:"white"});
+            $(".mycar form").append(money);
+            
+            $(".mycar form").append('<HR width="90%" SIZE=1 align="center"></HR>');
+            
+            $('#car_open').toggleClass('close');//切換class
+            
+        }
+        
+        function opencar(){
+            $('#car form').slideToggle(300);//login底下的form元素
+            $('#car_open').toggleClass('close');//切換class
+        }
+    
+//------------------document ready
+        $(document).ready(function() {
+            test();
+            getAlbumsImages();
+
+            
+            var that = $(this);
+            var mSearch = $("#m-search");
+            $("#search-input").bind("change paste keyup", function(){
+              var value = $(this).val();
+              if (!value) {
+                mSearch.html("");
+                return;
+              }; 
+              mSearch.html('#st:not([data-index*="' + value + '"]) {display: none;}');
+            });
+
+            
+//--------------標籤hover
+             $("#1").hover(function(){
+                $(this).addClass('inhover');
+                },function(){
+                $(this).removeClass('inhover');
+            })   
+             $("#2").hover(function(){
+                $(this).addClass('inhover');
+                },function(){
+                $(this).removeClass('inhover');
+            }) 
+            $("#3").hover(function(){
+                $(this).addClass('inhover');
+                },function(){
+                $(this).removeClass('inhover');
+            })   
+             $("#4").hover(function(){
+                $(this).addClass('inhover');
+                },function(){
+                $(this).removeClass('inhover');
+            }) 
+            
+//------------Dialog
+            $( "#mydlg" ).dialog({
+                modal:true,
+                show:500,
+                autoOpen: false,
+                height: 450,
+                width: 400,
+                buttons: {
+                    "Book": function() {
+                        sendcar($dlg_img,$dlg_city,$dlg_style,$dlg_name,$dlg_money);
+                        
+                        $( this ).dialog( "close" );
+                        
+                    },
+                },
+                close: function() {
+                    $( this ).dialog( "close" );
+                }
+            });
+           
+//-------------圖片預覽(上傳時)
+             $('#input_file').change(function(){
+        
+                 //當檔案改變後，做一些事 
+                readURL(this);   // this代表<input id="upimg">
+                 
+             });
+            
+            function readURL(input){
+                
+                //input 就是丟進去的this(<input type="file">)
+                if(input.files && input.files[0]){
+                    //當變成Object的時候(如果他有選擇到檔案，會被放在input.files裡面，而且是一個Array)||有檔案(一定是在第0個)
+                    
+                    //讀取檔案
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $("#preview_progressbarTW_img").attr('src', e.target.result);
+                        //onload事件讀出來的會是一個接近二進位檔案，所以可以直接改變img的src就好
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                    
+                    console.log("input.files"+input.files);
+                    $file=input.files[0];
+                }
+            }           
+             
+        }); // end ready
+        
+    </script>
+    <style>
+
+        .ui-dialog .ui-state-error { 
+            padding: .3em; 
+        }
+
+        .validateTips { border: 1px solid transparent; padding: 0.3em; }
+        
+      #header{
+            background-color: white;
+            height: 100px;
+            text-align:right;
+            margin-right: 120px;
+            font-size: 500%;
+            font-family:cursive;
+            }
+        #nav{            
+            background-color:white;
+            height: 50px;
+            left: 50px;
+            font-family: cursive;
+            
+        }
+        #nav ul{
+            list-style:none;
+            text-align: center;
+        }
+        #nav li{
+            display:inline-block;
+            margin-right: 90px;
+            
+        }
+        #nav a{
+            display: block;
+            color: black;
+            text-decoration: none;
+            font-size: 20px; 
+            text-align: center;
+/*            background-color:white;*/
+            line-height: 50px;
+            padding-left: 30px; 
+            padding-right: 30px; 
+        }
+        
+        .house{
+            position: fixed;
+        }
+        .house img{
+            width: 60px;
+        }
+        
+        .inhover{
+            background-color:antiquewhite;
+            color: black;
+            font-weight: bolder;
+        }
+        .storybed{
+            margin: 50px auto;
+            text-align: center;
+            padding-left: 150px;
+        }
+        .storybed div{
+            display: inline-block;
+            vertical-align:top;
+            margin-right: 30px;
+            float: left;
+            height: 300px;
+            width: 300px;
+        }
+        
+        #st{
+            float: left;
+            height: 80%;
+        }
+        
+        #st2{
+            float: left;
+            margin-bottom: 1px;
+            width: 90%;
+            height: 80%;
+            padding-left: 10px;
+        }
+        
+        #st3{
+            float: right;
+            width: 40%;
+            height: 10%;
+            font-size: 11px;
+            color:dimgray;
+            font-family:serif;
+        }
+        
+        h2.box-body {
+            font-size: 110%;
+            text-align:left;
+            margin-top: 5px;
+            
+        }
+
+        p.box-body {
+            font-size: 80%;
+            line-height: 1.8em;
+            text-align:left;
+            margin-top: 5px;
+            font-family:serif;
+            color:dimgray;
+        }
+        .footIcon{
+            display: inline-block;
+            margin: 5px
+        }
+        .footIcon img{
+            width: 30px;            
+        }
+        
+        #res{
+            border:1px solid gray;
+        }
+        .item{
+            border: 1px solid rgba(0,0,0,0.2);
+            font-size: 28px;
+            padding: 5px;
+            letter-spacing: 2px;
+        }
+        
+/*   成為房東   */
+        .wrapper{
+            display:inline-block;
+            padding-left: 150px;
+        }
+        .main{
+            position: absolute;
+            font-family:sans-serif;
+            opacity: 1;
+            height: 800px;
+            width: 500px;
+            z-index:3;
+            border-radius: 10px;
+/*            background-color: #f2f2f2;*/
+            padding: 20px;
+            padding-top: 0px;
+        }
+        input[type=button] {
+            width: 30%;
+            background-color:cadetblue;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0px 10px 350px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type=text], select {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type=file], select {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .main img{
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            box-sizing: border-box;
+        }
+        .main h1{
+            font-size: 250%;
+              color:cadetblue;
+        }
+        .main div{
+            margin-top: 10px;
+        }
+        
+        #stn{
+            width: 300px;
+            height: 300px;
+/*            border: 1px solid;*/
+            
+        }
+        
+/*-----------------------------*/
+
+        .search-form {
+          text-align: right;
+        }
+        #search-input {
+            margin-left: 67%;
+            margin-top: 11px;
+            border: 1 px border;
+            padding: .5em;
+            background: rgba(255,255,255,.5);
+            color: #555;
+            width: 200px;
+            height: 40px;
+          }
+        .search-form button {
+            float: right;
+            margin-top: 10px;
+            margin-right: 130px;
+            width: 6%;
+            background-color:cadetblue;
+            color: white;
+            padding: 12px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+          }
+/*-------------------*/      
+        #animate{
+            padding-left: 250px;
+            font-size: 500%;
+            background-color: antiquewhite;
+            height: 250px;
+            width: 1100px;
+            color:dimgrey;
+            font-family:sans-serif;
+        }
+        
+/*---------------*/
+       #car {
+            width: 300px;
+            position: absolute;
+            right: 0;
+           margin-right: 30px;
+            top: 182px;
+            z-index: 100;
+            background-color: rgb(70,130,180);
+            border-radius: 0 0 5px 5px;
+        }
+
+        #car a {
+            text-decoration: none;
+        }
+
+        #car_open {
+            margin: 0;
+            cursor: pointer;
+            background-image:  url(../_images/open.png);
+            background-repeat: no-repeat;
+            background-position:  8px 7px;
+            color: white;
+            padding: 5px 0 5px 30px;
+            border-radius: 0 0 5px 5px;
+        }
+
+        #car .close {
+            background-image: url(../_images/close.png);
+        }
+
+        #car_open:hover {
+            color: rgb(0,0,0);
+            background-color: rgb(200,200,200);	
+        }
+
+        #imgg{
+            position: absolute;
+            margin-left: 70px;
+            top: 90px;
+        
+    </style>
+</head>
+<body>
+    
+<!--    屋主視窗-->
+     <div id="header" class="animated bounce" style="animation-duration: 5s;animation-iteration-count:3">
+         
+         <div class="footIcon">
+              <a href="https://www.faceboobigk.com/?stype=lo&jlou=AfevmXOuzsF_5RoFD1stRWmhsHJ15LwYLCdN2zS_8dMAymdF1bExDh5j1Bki0T1Ncze3wTzV2A4VgcjJc7HhCeNErRlPyCgiOLD_VeCoEEaDmg&smuh=33219&lh=Ac-pRiyh8wLj9G5s"><img src="../image/facebook-logo.png"></a>
+          </div>
+        <div class="footIcon">
+              <a href="https://www.instagram.com/"><img src="../image/instagram-logo.png"></a>
+          </div>
+    <div class="footIcon">
+              <a href="https://accounts.google.com/Login/signinchooser?hl=zh-tw&flowName=GlifWebSignIn&flowEntry=ServiceLogin"><img src="../image/envelope.png"></a>
+          </div>
+     </div>
+    <div id="nav" >
+    <div id="imgg"><img src="../image/text-hualien-eng.png" height="150px" width="200px"></div>
+    <ul>
+       <li><a href="index.html">Story Factory</a></li>
+       <li>|</li>
+        <li id="2"><a href="#">Story Bed</a></li>
+        <li id="3"><a href="QA.html">QA</a></li>
+        <li id="4"><a href="message.html">Message</a></li>
+        </ul>
+    </div>
+    <HR width="80%" SIZE=1 align="center"></HR> 
+    
+<!--購物車-->
+     <div class="mycar" id="car" >
+	   <p id="car_open" onclick="opencar()">Shopping Cart</p>
+         <form>
+            <!--動態新增-->
+             
+         </form>
+    </div>
+    
+<!--動畫-->    
+    <div class="Animate">
+          <h2 id="animate" class="animated fadeInRight" style="animation-duration: 4s;animation-iteration-count:1">Story Bed</h2>
+    </div>
+
+<!--搜尋-->
+     <div class="search-form"><input id="search-input" type="text" placeholder="type city to search" /><button>Search</button>
+            <style id="m-search"></style>
+     </div>
+    
+ <!--    Dialog-->   
+    <div class="Dlg" id="mydlg" title="Booking Story Bed">
+          <!--動態新增-->
+    </div>
+    
+    
+<!--    stroy bed div -->
+    <div class="storybed">
+            <!--動態新增-->
+    </div>
+    
+     <HR width="80%" SIZE=1 align="center"></HR> <!--分割線-->
+        
+<!--    成為屋主 表單-->
+     <div class="wrapper" id="wp">
+	   <div class="main">
+	       <h1 class="animated infinite bounce">Become A Host</h1>
+		    <form action="process.html" method="post" name="signup" id="signup">
+                
+            <div>
+				<label for="name" class="label">姓名</label>
+				<input name="name" type="text" class="required" id="input_name" title="Please type your name.">
+			</div>
+                
+            <div>
+				<label for="name" class="label">住處所在鄉鎮</label>
+				<input name="name" type="text" class="required" id="input_city" title="Please type your city.">
+			</div>
+            
+             <div class="form-group">
+                        <label for="input-group">選擇圖片來源 (必填*)</label>
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="file" class="form-control-file" id="input_file" accept="image/*" data-max-size="5000">
+                            </div>
+                        </div>
+            </div>
+            
+            <div>
+				<label for="name" class="label">故事</label>
+				<input name="name" type="text" class="required" id="input_story" title="Please type your story.">
+			</div>
+
+			<div>
+				<label for="planet" class="label">住家類型</label>
+				<select name="planet" id="input_style" class="required" title="Please choose your house style.">
+<!--					<option value="">選擇一項</option>-->
+					<option value="v1">公寓</option>
+					<option value="v2">別墅</option>
+					<option value="v3">旅館</option>
+                    <option value="v4">小木屋</option>
+                    <option value="v5">獨棟房屋</option>
+				</select>
+			</div>
+            
+            <div>
+				<label for="planet" class="label">幾間臥室可供房客使用</label>
+				<select name="planet" id="input_room" class="required" title="Please choose your room.">
+<!--					<option value="">選擇一項</option>-->
+					<option value="r1">1間臥室</option>
+					<option value="r2">2間臥室</option>
+					<option value="r3">3間臥室</option>
+                    <option value="r4">4間臥室</option>
+                    <option value="r4">5間臥室</option>
+                    <option value="r1">6間臥室</option>
+					<option value="r2">7間臥室</option>
+					<option value="r3">8間臥室</option>
+                    <option value="r4">9間臥室</option>
+                    <option value="r4">10間臥室</option>
+				</select>
+			</div>
+	
+            <div>
+				<label for="name" class="label">每晚價格</label>
+				<input name="name" type="text" class="required" id="input_money" title="Please type your range.">
+			</div>
+            
+			<div>
+				<input type="button" name="submit" id="submit" onclick="upload()" value="Submit">
+			</div>
+		</form>
+		
+	</div>
+ </div>
+</body>
+</html>
